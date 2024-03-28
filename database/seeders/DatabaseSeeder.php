@@ -35,12 +35,12 @@ class DatabaseSeeder extends Seeder
          \App\Models\User::create([
              'name' => 'Duvaal super',
              'email' => 'adminduvaal@gmail.com',
-             'function' => 'DRH' ,
+             'fontion' => 'DRH' ,
              'phone' =>'+237677895592',
-             'date_entree' => date('24-3-2021') ,
+             'date_entree' => date('2021-03-21') ,
              'role_id' => '2',
              'password' => 'password'
 
-         ]);
+        ]);
     }
 }
