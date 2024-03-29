@@ -47,6 +47,8 @@ class UserController extends Controller
         }
 
         $user =User::create([...$request->all() , "password" =>"123456" , "role_id"=>3]) ;
+        $user->generateMatricule();
+        $user -> save() ;
 
         return response()->json(['status' =>true ,
                 'user'=>$user 
