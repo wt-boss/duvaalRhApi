@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\CongesController;
+use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\SanctionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,4 +29,7 @@ Route::get('/auth/logout', [AuthController::class, 'logoutUser'])->name('logout'
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::resource('/user' , UserController::class) ; 
+    Route::resource('/sanction' , SanctionController::class) ; 
+    Route::resource('/presence' , PresenceController::class) ; 
+    Route::resource('/conge' , CongesController::class) ; 
 }) ;

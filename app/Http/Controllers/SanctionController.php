@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sanction;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreSanctionRequest;
 use App\Http\Requests\UpdateSanctionRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Laravel\Sanctum\Sanctum;
 
 class SanctionController extends Controller
 {
@@ -13,7 +17,16 @@ class SanctionController extends Controller
      */
     public function index()
     {
-        //
+        $sanctionBd = Sanction::all() ;
+        $sanctions = [];
+
+        foreach ($sanctionBd as $sanction) {
+            $user=$sanction->user ;
+           $items = (['sanction'=>$sanction , 'user'=>$user]) ;
+           array_push($sanctions , $items) ;
+        }
+
+        return response()->json(['status'=>200 , 'sanctions'=>$sanctions]) ;
     }
 
     /**
@@ -27,9 +40,37 @@ class SanctionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSanctionRequest $request)
+    public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all() ,[
+            'matricule'=> 'required|string' ,
+            'motif'=>'required|string' ,
+            'date'=>'required|date' ,
+            'date'=>'required|date' ,
+            
+        ]) ;
+
+
+
+        if($validator->fails()){
+            return response()->json(
+                [
+                    'status'=> false,
+                    'message'=>$validator->errors()
+
+                ] , 422
+            ) ;
+        }
+
+        $user = User::where('matricule' ,'=', $request->matricule)->first() ;
+
+        $sanction =Sanction::create([...$request->except('matricule') , "user_id" =>$user->id, "commentaire"=>"" , 'status'=>0]) ;
+
+        return response()->json(['status' =>true ,
+
+                'sanction'=>$sanction , "user"=>$user
+
+        ]);
     }
 
     /**
@@ -37,7 +78,7 @@ class SanctionController extends Controller
      */
     public function show(Sanction $sanction)
     {
-        //
+        return response()->json(['status'=>200 , 'sanction'=>$sanction]) ;
     }
 
     /**
